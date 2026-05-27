@@ -1,0 +1,77 @@
+
+import React, { useEffect, useState } from 'react'
+import * as PaymentService from '../../services/PaymentService'
+import Loading from '../../components/LoadingComponent/Loading'
+import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
+import { useNavigate } from 'react-router-dom'
+
+const PaymentVNPayReturn = () => {
+
+  const navigate = useNavigate()
+  const [status, setStatus] = useState('loading')
+  const [messageText, setMessageText] = useState('Đang kiểm tra trạng thái thanh toán...')
+  const [attempt, setAttempt] = useState(0)
+
+
+  useEffect(() => {
+    const verifyReturn = async () => {
+      try {
+        const queryString = window.location.search.replace(/^\?/, '')
+        if (!queryString) {
+          setStatus('failed')
+          setMessageText('Không có thông tin thanh toán từ VNPay')
+          return
+        }
+        const res = await PaymentService.verifyVNPayReturn(queryString)
+        if (res?.status === 'OK') {
+          const data = res.data
+          if (data?.isPaid || data?.paymentStatus === 'paid') {
+            setStatus('success')
+            setMessageText('Thanh toán thành công')
+            if (data?.orderId) localStorage.setItem('vnpay_orderId', data.orderId)
+          } else if (data?.paymentStatus === 'pending') {
+            setStatus('loading')
+            setMessageText('Thanh toán đang chờ xử lý')
+          } else {
+            setStatus('failed')
+            setMessageText('Thanh toán thất bại')
+          }
+        } else {
+          setStatus('failed')
+          setMessageText(res?.message || 'Không thể xác minh kết quả thanh toán. Vui lòng kiểm tra lại đơn hàng.')
+        }
+      } catch (e) {
+        console.error('verifyVNPayReturn error:', e.response?.data || e.message || e)
+        setStatus('failed')
+        setMessageText('Không thể xác minh kết quả thanh toán. Vui lòng kiểm tra lại đơn hàng.')
+      }
+    }
+    verifyReturn()
+  }, [attempt])
+
+
+  const handleViewOrder = () => {
+    const orderId = localStorage.getItem('vnpay_orderId')
+    if (orderId) navigate(`/details-order/${orderId}`)
+    else navigate('/my-order')
+  }
+
+  const handleHome = () => {
+    navigate('/')
+  }
+
+  return (
+    <div style={{padding: 20}}>
+      <Loading isLoading={status === 'loading'}>
+        <h3>{messageText}</h3>
+        <div style={{display: 'flex', gap: 12, marginTop: 20}}>
+          <ButtonComponent onClick={() => setAttempt(attempt + 1)} textbutton={'Kiểm tra lại'} />
+          <ButtonComponent onClick={handleViewOrder} textbutton={'Xem đơn hàng'} />
+          <ButtonComponent onClick={handleHome} textbutton={'Về trang chủ'} />
+        </div>
+      </Loading>
+    </div>
+  )
+}
+
+export default PaymentVNPayReturn
