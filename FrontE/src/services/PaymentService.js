@@ -12,10 +12,10 @@ export const getConfig = async () => {
   return res.data
 }
 
-export const createVNPayPayment = async (orderId, amount, access_token) => {
+export const createVNPayPayment = async (orderId, amount, returnUrl, access_token) => {
   const res = await axios.post(
     `${process.env.REACT_APP_API_URL}/payment/vnpay/create-payment`,
-    { orderId, amount },
+    { orderId, amount, returnUrl },
     {
       headers: {
         Authorization: `Bearer ${access_token}`,

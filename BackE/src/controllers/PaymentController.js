@@ -91,7 +91,7 @@ const crypto = require('crypto');
 // POST /api/payment/vnpay/create-payment
 const createVNPayPayment = async (req, res) => {
   try {
-    const { orderId, amount, bankCode } = req.body;
+    const { orderId, amount, bankCode, returnUrl } = req.body;
     if (!orderId || !amount) {
       return res.status(400).json({ status: 'ERR', message: 'orderId and amount are required' });
     }
@@ -106,7 +106,7 @@ const createVNPayPayment = async (req, res) => {
     }
     const ipAddr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const userId = req.user ? req.user.id : undefined;
-    const result = await PaymentService.createVNPayPayment({ orderId, amount, bankCode, ipAddr, userId });
+    const result = await PaymentService.createVNPayPayment({ orderId, amount, bankCode, ipAddr, userId, returnUrl });
     return res.status(200).json({ status: 'OK', data: result });
   } catch (e) {
     return res.status(500).json({ status: 'ERR', message: e.message });

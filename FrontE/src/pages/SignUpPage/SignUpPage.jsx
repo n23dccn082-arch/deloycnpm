@@ -56,6 +56,14 @@ const SignUpPage = () => {
   }
 
   const handleSignUp = () => {
+    if (password.length < 6) {
+      message.error('Mật khẩu phải chứa ít nhất 6 ký tự!')
+      return
+    }
+    if (password !== confirmPassword) {
+      message.error('Mật khẩu và xác nhận mật khẩu không khớp!')
+      return
+    }
     mutation.mutate({ email, password, confirmPassword })
   }
 

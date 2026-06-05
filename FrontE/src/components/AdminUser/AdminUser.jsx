@@ -245,7 +245,7 @@ const AdminUser = () => {
     {
       title: 'Phone',
       dataIndex: 'phone',
-      sorter: (a, b) => (a.phone || 0) - (b.phone || 0),
+      sorter: (a, b) => (a.phone || '').localeCompare(b.phone || ''),
       ...getColumnSearchProps('phone')
     },
     {
@@ -373,7 +373,10 @@ const AdminUser = () => {
             <Form.Item
               label="Phone"
               name="phone"
-              rules={[{ required: true, message: 'Please input your  phone!' }]}
+              rules={[
+                { required: true, message: 'Please input your phone!' },
+                { pattern: /^[0-9]{10}$/, message: 'Phone number must be exactly 10 digits!' }
+              ]}
             >
               <InputComponent value={stateUserDetails.phone} onChange={handleOnchangeDetails} name="phone" />
             </Form.Item>

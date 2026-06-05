@@ -176,7 +176,8 @@ const PaymentPage = () => {
           }
         } catch (err) {}
 
-        const payRes = await PaymentService.createVNPayPayment(orderId, totalPriceMemo, user?.access_token)
+        const returnUrl = `${window.location.origin}/payment/vnpay-return`
+        const payRes = await PaymentService.createVNPayPayment(orderId, totalPriceMemo, returnUrl, user?.access_token)
         if (payRes?.status === 'OK' && payRes?.data?.paymentUrl) {
           // Không cần setLoadingOrder(false) vì sẽ redirect
           setProcessingMsg('');
@@ -464,7 +465,10 @@ const PaymentPage = () => {
               <Form.Item
                 label="Phone"
                 name="phone"
-                rules={[{ required: true, message: 'Please input your  phone!' }]}
+                rules={[
+                  { required: true, message: 'Vui lòng nhập số điện thoại!' },
+                  { pattern: /^[0-9]{10}$/, message: 'Số điện thoại phải chứa đúng 10 chữ số!' }
+                ]}
               >
                 <InputComponent value={stateUserDetails.phone} onChange={handleOnchangeDetails} name="phone" />
               </Form.Item>

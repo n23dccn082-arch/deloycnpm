@@ -14,12 +14,12 @@ function sortObject(obj) {
   return sorted;
 }
 
-async function createVNPayPayment({ orderId, amount, bankCode, ipAddr, userId }) {
+async function createVNPayPayment({ orderId, amount, bankCode, ipAddr, userId, returnUrl }) {
   // Read config from env
   const vnp_TmnCode = process.env.VNP_TMN_CODE;
   const vnp_HashSecret = process.env.VNP_HASH_SECRET;
   const vnp_Url = process.env.VNP_URL;
-  const vnp_ReturnUrl = process.env.VNP_RETURN_URL;
+  const vnp_ReturnUrl = returnUrl || process.env.VNP_RETURN_URL;
   if (!vnp_TmnCode || !vnp_HashSecret || !vnp_Url || !vnp_ReturnUrl) {
     throw new Error('VNPay config missing in environment variables');
   }

@@ -9,17 +9,27 @@ const createUser = async (req, res) => {
         if (!email || !password || !confirmPassword) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The input is required'
+                message: 'Vui lòng nhập đầy đủ thông tin'
             })
         } else if (!isCheckEmail) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The input is email'
+                message: 'Email không hợp lệ'
+            })
+        } else if (password.length < 6) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'Mật khẩu phải chứa ít nhất 6 ký tự'
             })
         } else if (password !== confirmPassword) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The password is equal confirmPassword'
+                message: 'Mật khẩu và xác nhận mật khẩu không trùng khớp'
+            })
+        } else if (phone && !/^[0-9]{10}$/.test(phone)) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'Số điện thoại phải chứa đúng 10 chữ số'
             })
         }
         const response = await UserService.createUser(req.body)
@@ -72,6 +82,12 @@ const updateUser = async (req, res) => {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The userId is required'
+            })
+        }
+        if (data.phone && !/^[0-9]{10}$/.test(data.phone)) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'Số điện thoại phải chứa đúng 10 chữ số'
             })
         }
         const response = await UserService.updateUser(userId, data)

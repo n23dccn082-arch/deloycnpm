@@ -70,6 +70,15 @@ const ProfilePage = () => {
     }
 
     const handleUpdate = () => {
+        const phoneReg = /^[0-9]{10}$/
+        if (!phone) {
+            message.error('Vui lòng nhập số điện thoại!')
+            return
+        }
+        if (!phoneReg.test(phone)) {
+            message.error('Số điện thoại phải chứa đúng 10 chữ số!')
+            return
+        }
         // submit all fields at once; keep payload shape consistent (no avatar here)
         mutation.mutate({ id: user?.id, email, name, phone, address, access_token: user?.access_token })
     }
