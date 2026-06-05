@@ -507,7 +507,7 @@ const PaymentPage = () => {
                 <InputComponent value={stateUserDetails.address} onChange={handleOnchangeDetails} name="address" />
               </Form.Item>
 
-              {user?.id === 'guest' && (
+              {(!user?.id || user?.id === 'guest') && (
                 <Form.Item
                   label="Email"
                   name="email"
