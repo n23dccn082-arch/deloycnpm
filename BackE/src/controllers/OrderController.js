@@ -145,7 +145,8 @@ const createGuestOrder = async (req, res) => {
             address,
             city,
             phone,
-            orderItems
+            orderItems,
+            email
         } = req.body
 
         if (
@@ -157,6 +158,7 @@ const createGuestOrder = async (req, res) => {
             !address ||
             !city ||
             !phone ||
+            !email ||
             !Array.isArray(orderItems) ||
             orderItems.length === 0
         ) {
@@ -173,7 +175,15 @@ const createGuestOrder = async (req, res) => {
             });
         }
 
-        // Generate a mock unique email from the phone number
+        const isEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!isEmail.test(email)) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Email không đúng định dạng",
+            });
+        }
+
+        // Generate a mock unique email from the phone number for the user account mapping
         const guestEmail = `guest_${phone}@dtshop.com`
 
         // Find or create guest user document in the database
@@ -194,7 +204,7 @@ const createGuestOrder = async (req, res) => {
         const response = await OrderService.createOrder({
             ...req.body,
             user: userDoc._id,
-            email: guestEmail
+            email: email // Store the customer's actual email
         })
 
         return res.status(200).json(response)

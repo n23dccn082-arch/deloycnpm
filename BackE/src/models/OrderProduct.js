@@ -21,6 +21,7 @@ const orderSchema = new mongoose.Schema({
         city: { type: String, required: true },
         phone: { type: String, required: true },
     },
+    email: { type: String },
     paymentMethod: { type: String, required: true },
     paymentStatus: { type: String, enum: ['unpaid', 'pending', 'paid', 'failed', 'cancelled'], default: 'unpaid' },
     transactionId: { type: String },

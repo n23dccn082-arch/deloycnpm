@@ -152,8 +152,69 @@ async function sendPasswordResetEmail(to, resetLink) {
   }
 }
 
+// Hàm gửi email cập nhật trạng thái đơn hàng
+async function sendOrderStatusUpdateEmail(to, order) {
+  checkMailConfig()
+  const transporter = getTransporter()
+  const FROM = process.env.MAIL_FROM
+
+  const { _id, status, isPaid, orderItems, totalPrice } = order;
+  const statusLabel = {
+    pending: 'Chưa giao hàng',
+    delivering: 'Đang giao hàng',
+    delivered: 'Giao hàng thành công',
+    cancelled: 'Đã hủy'
+  }[status || 'pending'];
+
+  let productRows = '';
+  orderItems.forEach(item => {
+    productRows += `<tr>
+      <td>${item.name}</td>
+      <td>${item.amount}</td>
+    </tr>`;
+  });
+
+  const html = `
+    <h2>DT Shop - Cập nhật trạng thái đơn hàng</h2>
+    <p>Chào bạn,</p>
+    <p>Đơn hàng <b>${_id}</b> của bạn đã được cập nhật trạng thái mới:</p>
+    <p style="font-size: 16px;"><b>Trạng thái đơn hàng:</b> <span style="color: #ea580c; font-weight: bold;">${statusLabel}</span></p>
+    <p><b>Trạng thái thanh toán:</b> ${isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</p>
+    <hr/>
+    <h3>Chi tiết đơn hàng:</h3>
+    <table border="1" cellpadding="6" style="border-collapse:collapse;">
+      <thead><tr><th>Sản phẩm</th><th>Số lượng</th></tr></thead>
+      <tbody>${productRows}</tbody>
+    </table>
+    <p><b>Tổng tiền:</b> ${totalPrice.toLocaleString()}₫</p>
+    <p>Cảm ơn bạn đã đồng hành cùng DT Shop!</p>
+  `;
+
+  try {
+    await transporter.verify()
+  } catch (verifyErr) {
+    console.error('SMTP verify failed:', verifyErr?.message || verifyErr)
+    throw verifyErr
+  }
+
+  try {
+    await transporter.sendMail({
+      from: FROM,
+      to,
+      subject: `DT Shop - Cập nhật trạng thái đơn hàng #${_id}`,
+      html
+    })
+    console.log(`Status update email sent to ${to} for order ${_id}`)
+    return true
+  } catch (error) {
+    console.error('Status update email failed:', error?.message || error)
+    throw error
+  }
+}
+
 module.exports = {
   sendTestEmail,
   sendOrderSuccessEmail,
   sendPasswordResetEmail,
+  sendOrderStatusUpdateEmail,
 };

@@ -37,7 +37,8 @@ const PaymentPage = () => {
     name: '',
     phone: '',
     address: '',
-    city: ''
+    city: '',
+    email: ''
   })
   const [form] = Form.useForm();
 
@@ -54,10 +55,11 @@ const PaymentPage = () => {
         city: user?.city,
         name: user?.name,
         address: user?.address,
-        phone: user?.phone
+        phone: user?.phone,
+        email: user?.email || ''
       })
     }
-  }, [isOpenModalUpdateInfo])
+  }, [isOpenModalUpdateInfo, user])
 
   const handleChangeAddress = () => {
     setIsOpenModalUpdateInfo(true)
@@ -331,7 +333,7 @@ const PaymentPage = () => {
   const handleUpdateInforUser = () => {
     form.validateFields()
       .then((values) => {
-        const { name, address, city, phone } = values
+        const { name, address, city, phone, email } = values
         if (user?.id && user?.id !== 'guest') {
           mutationUpdate.mutate({ id: user?.id, token: user?.access_token, name, address, city, phone }, {
             onSuccess: () => {
@@ -340,7 +342,7 @@ const PaymentPage = () => {
             }
           })
         } else {
-          dispatch(updateUser({ _id: 'guest', name, address, city, phone }))
+          dispatch(updateUser({ _id: 'guest', name, address, city, phone, email }))
           setIsOpenModalUpdateInfo(false)
         }
       })
@@ -504,6 +506,19 @@ const PaymentPage = () => {
               >
                 <InputComponent value={stateUserDetails.address} onChange={handleOnchangeDetails} name="address" />
               </Form.Item>
+
+              {user?.id === 'guest' && (
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[
+                    { required: true, message: 'Vui lòng nhập email để nhận thông báo đơn hàng!' },
+                    { type: 'email', message: 'Email không đúng định dạng!' }
+                  ]}
+                >
+                  <InputComponent value={stateUserDetails.email} onChange={handleOnchangeDetails} name="email" />
+                </Form.Item>
+              )}
             </Form>
           </Loading>
         </ModalComponent>

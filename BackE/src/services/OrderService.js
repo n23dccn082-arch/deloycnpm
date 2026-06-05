@@ -75,7 +75,8 @@ const createOrder = (newOrder) => {
                 totalPrice,
                 user,
                 isPaid,
-                paidAt
+                paidAt,
+                email
             })
 
             if (createdOrder) {
@@ -277,6 +278,27 @@ const updateOrderStatus = (id, data) => {
             }
 
             await order.save()
+
+            // Gửi email thông báo trạng thái cập nhật cho người dùng (nếu có email thật)
+            let recipientEmail = order.email
+            if (!recipientEmail && order.user) {
+                try {
+                    const userDoc = await User.findById(order.user).select('email')
+                    recipientEmail = userDoc?.email
+                } catch (err) {
+                    console.error("Failed to query user for email notification:", err.message)
+                }
+            }
+
+            if (recipientEmail && !(recipientEmail.startsWith('guest_') && recipientEmail.endsWith('@dtshop.com'))) {
+                console.log(`Sending status update notification email to: ${recipientEmail}`)
+                try {
+                    const { sendOrderStatusUpdateEmail } = require('./MailService')
+                    await sendOrderStatusUpdateEmail(recipientEmail, order)
+                } catch (mailErr) {
+                    console.error("Failed to send status update email:", mailErr.message)
+                }
+            }
 
             return resolve({
                 status: 'OK',
