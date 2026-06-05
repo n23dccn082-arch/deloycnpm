@@ -62,10 +62,18 @@ function App() {
     }, [])
 
     const getUser = async (id, token) => {
-        setIsLoading(true)
-        const res = await UserService.getDetailsUser(id, token)
-        dispatch(updateUser({ ...res.data, access_token: token }))
-        setIsLoading(false)
+        try {
+            setIsLoading(true)
+            const res = await UserService.getDetailsUser(id, token)
+            dispatch(updateUser({ ...res.data, access_token: token }))
+        } catch (err) {
+            console.error("Failed to restore user session:", err)
+            dispatch(resetUser())
+            localStorage.removeItem('access_token')
+            localStorage.removeItem('refresh_token')
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
