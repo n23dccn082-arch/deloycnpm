@@ -5,6 +5,7 @@ export const orderContant = {
   },
   payment: {
     later_money: 'Thanh toán khi nhận hàng',
-    paypal: 'Thanh toán bằng paypal'
+    vnpay: 'Thanh toán bằng VNPay',
+    paypal: 'Thanh toán bằng VNPay'
   }
 }
