@@ -7,7 +7,7 @@ export const WrapperHeader = styled.h1`
     margin: 4px 0;
 `
 export const WrapperContentProfile = styled.div`
-    max-width: 760px;
+    max-width: 960px;
     margin: 20px auto 0;
     background: #fff;
     border-radius: 12px;
@@ -39,7 +39,7 @@ export const WrapperLabel = styled.label`
     font-size: 12px;
     line-height: 30px;
     font-weight: 600;
-    width: 60px;
+    white-space: nowrap;
     text-align: left;
 `
 

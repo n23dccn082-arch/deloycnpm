@@ -126,8 +126,8 @@ const ProfilePage = () => {
         <div style={{ width: '100%', maxWidth: 1100, margin: '0 auto' }}>
 
             <Loading isLoading={isLoading || isLoadingPass}>
-                <WrapperContentProfile style={{ maxWidth: 960 }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 40 }}>
+                <WrapperContentProfile>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 40 }}>
                         {/* Cột 1: Thông tin cá nhân */}
                         <div>
                             <WrapperCardTitle>
@@ -135,25 +135,25 @@ const ProfilePage = () => {
                                 <CardSubtitle>Cập nhật thông tin cá nhân của bạn</CardSubtitle>
                             </WrapperCardTitle>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 16 }}>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    <WrapperLabel htmlFor="name">Họ và tên</WrapperLabel>
-                                    <InputForm style={{ width: '100%' }} id="name" value={name} onChange={handleOnchangeName} />
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 16 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <WrapperLabel htmlFor="name" style={{ minWidth: 100 }}>Họ và tên</WrapperLabel>
+                                    <InputForm style={{ flex: 1 }} id="name" value={name} onChange={handleOnchangeName} />
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    <WrapperLabel htmlFor="email">Email</WrapperLabel>
-                                    <InputForm style={{ width: '100%' }} id="email" value={email} onChange={handleOnchangeEmail} />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <WrapperLabel htmlFor="email" style={{ minWidth: 100 }}>Email</WrapperLabel>
+                                    <InputForm style={{ flex: 1 }} id="email" value={email} onChange={handleOnchangeEmail} />
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    <WrapperLabel htmlFor="phone">Số điện thoại</WrapperLabel>
-                                    <InputForm style={{ width: '100%' }} id="phone" value={phone} onChange={handleOnchangePhone} />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <WrapperLabel htmlFor="phone" style={{ minWidth: 100 }}>Số điện thoại</WrapperLabel>
+                                    <InputForm style={{ flex: 1 }} id="phone" value={phone} onChange={handleOnchangePhone} />
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    <WrapperLabel htmlFor="address">Địa chỉ</WrapperLabel>
-                                    <InputForm style={{ width: '100%' }} id="address" value={address} onChange={handleOnchangeAddress} />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <WrapperLabel htmlFor="address" style={{ minWidth: 100 }}>Địa chỉ</WrapperLabel>
+                                    <InputForm style={{ flex: 1 }} id="address" value={address} onChange={handleOnchangeAddress} />
                                 </div>
                             </div>
 
@@ -182,20 +182,20 @@ const ProfilePage = () => {
                                 <CardSubtitle>Đổi mật khẩu tài khoản của bạn</CardSubtitle>
                             </WrapperCardTitle>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 16 }}>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    <WrapperLabel htmlFor="currentPassword">Mật khẩu hiện tại</WrapperLabel>
-                                    <InputForm style={{ width: '100%' }} id="currentPassword" type="password" placeholder="Nhập mật khẩu hiện tại" value={currentPassword} onChange={setCurrentPassword} />
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 16 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <WrapperLabel htmlFor="currentPassword" style={{ minWidth: 140 }}>Mật khẩu hiện tại</WrapperLabel>
+                                    <InputForm style={{ flex: 1 }} id="currentPassword" type="password" placeholder="Nhập mật khẩu hiện tại" value={currentPassword} onChange={setCurrentPassword} />
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    <WrapperLabel htmlFor="newPassword">Mật khẩu mới</WrapperLabel>
-                                    <InputForm style={{ width: '100%' }} id="newPassword" type="password" placeholder="Mật khẩu mới (tối thiểu 6 ký tự)" value={newPassword} onChange={setNewPassword} />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <WrapperLabel htmlFor="newPassword" style={{ minWidth: 140 }}>Mật khẩu mới</WrapperLabel>
+                                    <InputForm style={{ flex: 1 }} id="newPassword" type="password" placeholder="Tối thiểu 6 ký tự" value={newPassword} onChange={setNewPassword} />
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    <WrapperLabel htmlFor="confirmNewPassword">Xác nhận mật khẩu mới</WrapperLabel>
-                                    <InputForm style={{ width: '100%' }} id="confirmNewPassword" type="password" placeholder="Nhập lại mật khẩu mới" value={confirmNewPassword} onChange={setConfirmNewPassword} />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <WrapperLabel htmlFor="confirmNewPassword" style={{ minWidth: 140 }}>Xác nhận MK mới</WrapperLabel>
+                                    <InputForm style={{ flex: 1 }} id="confirmNewPassword" type="password" placeholder="Nhập lại mật khẩu mới" value={confirmNewPassword} onChange={setConfirmNewPassword} />
                                 </div>
                             </div>
 
