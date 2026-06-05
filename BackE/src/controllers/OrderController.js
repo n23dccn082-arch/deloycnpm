@@ -34,7 +34,7 @@ const createOrder = async (req, res) => {
             }
 
         if (!/^[0-9]{10}$/.test(phone)) {
-            return res.status(400).json({
+            return res.status(200).json({
                 status: "ERR",
                 message: "Số điện thoại phải chứa đúng 10 chữ số",
             });

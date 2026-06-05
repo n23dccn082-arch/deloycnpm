@@ -286,6 +286,9 @@ const resetPassword = (token, passwordData) => {
             if (!password || !confirmPassword) {
                 return resolve({ status: 'ERR', message: 'Các trường mật khẩu là bắt buộc' })
             }
+            if (password.length < 6) {
+                return resolve({ status: 'ERR', message: 'Mật khẩu phải chứa ít nhất 6 ký tự.' })
+            }
             if (password !== confirmPassword) {
                 return resolve({ status: 'ERR', message: 'Mật khẩu không khớp' })
             }
