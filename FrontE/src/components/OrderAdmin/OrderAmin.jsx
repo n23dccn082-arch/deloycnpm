@@ -107,50 +107,61 @@ const OrderAdmin = () => {
     {
       title: 'User name',
       dataIndex: 'userName',
-      sorter: (a, b) => a.userName.length - b.userName.length,
+      sorter: (a, b) => (a.userName || '').localeCompare(b.userName || ''),
       ...getColumnSearchProps('userName')
     },
     {
       title: 'Phone',
       dataIndex: 'phone',
-      sorter: (a, b) => a.phone.length - b.phone.length,
+      sorter: (a, b) => (a.phone || '').localeCompare(b.phone || ''),
       ...getColumnSearchProps('phone')
     },
     {
       title: 'Address',
       dataIndex: 'address',
-      sorter: (a, b) => a.address.length - b.address.length,
+      sorter: (a, b) => (a.address || '').localeCompare(b.address || ''),
       ...getColumnSearchProps('address')
     },
     {
       title: 'Paided',
       dataIndex: 'isPaid',
-      sorter: (a, b) => a.isPaid.length - b.isPaid.length,
+      sorter: (a, b) => (a.isPaid || '').localeCompare(b.isPaid || ''),
       ...getColumnSearchProps('isPaid')
     },
     {
       title: 'Shipped',
       dataIndex: 'isDelivered',
-      sorter: (a, b) => a.isDelivered.length - b.isDelivered.length,
+      sorter: (a, b) => (a.isDelivered || '').localeCompare(b.isDelivered || ''),
       ...getColumnSearchProps('isDelivered')
     },
     {
       title: 'Payment method',
       dataIndex: 'paymentMethod',
-      sorter: (a, b) => a.paymentMethod.length - b.paymentMethod.length,
+      sorter: (a, b) => (a.paymentMethod || '').localeCompare(b.paymentMethod || ''),
       ...getColumnSearchProps('paymentMethod')
     },
     {
       title: 'Total price',
       dataIndex: 'totalPrice',
-      sorter: (a, b) => a.totalPrice.length - b.totalPrice.length,
+      sorter: (a, b) => (a.totalPriceRaw || 0) - (b.totalPriceRaw || 0),
       ...getColumnSearchProps('totalPrice')
     },
   ];
 
   const dataTable = orders?.data?.length && orders?.data?.map((order) => {
     console.log('usewr', order)
-    return { ...order, key: order._id, userName: order?.shippingAddress?.fullName, phone: order?.shippingAddress?.phone, address: order?.shippingAddress?.address, paymentMethod: orderContant.payment[order?.paymentMethod],isPaid: order?.isPaid ? 'TRUE' :'FALSE',isDelivered: order?.isDelivered ? 'TRUE' : 'FALSE', totalPrice: convertPrice(order?.totalPrice)}
+    return { 
+      ...order, 
+      key: order._id, 
+      userName: order?.shippingAddress?.fullName, 
+      phone: order?.shippingAddress?.phone, 
+      address: order?.shippingAddress?.address, 
+      paymentMethod: orderContant.payment[order?.paymentMethod],
+      isPaid: order?.isPaid ? 'TRUE' :'FALSE',
+      isDelivered: order?.isDelivered ? 'TRUE' : 'FALSE', 
+      totalPrice: convertPrice(order?.totalPrice),
+      totalPriceRaw: order?.totalPrice || 0
+    }
   })
 
   return (

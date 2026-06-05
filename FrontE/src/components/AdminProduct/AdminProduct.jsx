@@ -243,13 +243,13 @@ const AdminProduct = () => {
     {
       title: 'Name',
       dataIndex: 'name',
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => (a.name || '').localeCompare(b.name || ''),
       ...getColumnSearchProps('name')
     },
     {
       title: 'Price',
       dataIndex: 'price',
-      sorter: (a, b) => a.price - b.price,
+      sorter: (a, b) => (a.price || 0) - (b.price || 0),
       filters: [
         {
           text: '>= 50',
@@ -270,7 +270,7 @@ const AdminProduct = () => {
     {
       title: 'Rating',
       dataIndex: 'rating',
-      sorter: (a, b) => a.rating - b.rating,
+      sorter: (a, b) => (a.rating || 0) - (b.rating || 0),
       filters: [
         {
           text: '>= 3',

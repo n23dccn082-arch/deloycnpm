@@ -25,7 +25,7 @@ const NavBarComponent = () => {
             case 'star':
                 return options.map((option) => {
                     return (
-                        <div style={{ dispaly: 'flex' }}>
+                        <div style={{ display: 'flex' }}>
                             <Rate style={{ fontSize: '12px' }} disabled defaultValue={option} />
                             <span> {`tu ${option}  sao`}</span>
                         </div>

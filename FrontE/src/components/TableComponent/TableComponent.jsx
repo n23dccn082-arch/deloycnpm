@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { Table, Button } from 'antd';
 import React, { useState } from 'react'
 import Loading from '../../components/LoadingComponent/Loading'
 import { Excel } from "antd-table-saveas-excel";
@@ -38,19 +38,25 @@ const TableComponent = (props) => {
   
   return (
     <Loading isLoading={isLoading}>
-      {!!rowSelectedKeys.length && (
-        <div style={{
-          background: '#1d1ddd',
-          color: '#fff',
-          fontWeight: 'bold',
-          padding: '10px',
-          cursor: 'pointer'
-        }}
-          onClick={handleDeleteAll}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '10px', alignItems: 'center' }}>
+        {!!rowSelectedKeys.length && (
+          <Button 
+            type="primary" 
+            danger 
+            onClick={handleDeleteAll}
+            style={{ fontWeight: 'bold' }}
+          >
+            Xóa tất cả ({rowSelectedKeys.length})
+          </Button>
+        )}
+        <Button 
+          type="default" 
+          onClick={exportExcel}
+          style={{ borderColor: '#217346', color: '#217346', fontWeight: 'bold' }}
         >
-          Xóa tất cả
-        </div>
-      )}
+          Xuất Excel
+        </Button>
+      </div>
       <Table
         rowSelection={{
           type: selectionType,

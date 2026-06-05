@@ -213,19 +213,19 @@ const AdminUser = () => {
     {
       title: 'Name',
       dataIndex: 'name',
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => (a.name || '').localeCompare(b.name || ''),
       ...getColumnSearchProps('name')
     },
     {
       title: 'Email',
       dataIndex: 'email',
-      sorter: (a, b) => a.email.length - b.email.length,
+      sorter: (a, b) => (a.email || '').localeCompare(b.email || ''),
       ...getColumnSearchProps('email')
     },
     {
       title: 'Address',
       dataIndex: 'address',
-      sorter: (a, b) => a.address.length - b.address.length,
+      sorter: (a, b) => (a.address || '').localeCompare(b.address || ''),
       ...getColumnSearchProps('address')
     },
     {
@@ -245,7 +245,7 @@ const AdminUser = () => {
     {
       title: 'Phone',
       dataIndex: 'phone',
-      sorter: (a, b) => a.phone - b.phone,
+      sorter: (a, b) => (a.phone || 0) - (b.phone || 0),
       ...getColumnSearchProps('phone')
     },
     {

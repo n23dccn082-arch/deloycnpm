@@ -33,13 +33,15 @@ const SignUpPage = () => {
   const { data, isLoading, isSuccess, isError } = mutation
 
   useEffect(() => {
-    if (isSuccess) {
-      message.success()
+    if (isSuccess && data?.status === 'OK') {
+      message.success('Đăng ký tài khoản thành công!')
       handleNavigateSignIn()
+    } else if (isSuccess && data?.status === 'ERR') {
+      message.error(data?.message || 'Đăng ký thất bại')
     } else if (isError) {
-      message.error()
+      message.error('Có lỗi xảy ra, vui lòng thử lại')
     }
-  }, [isSuccess, isError])
+  }, [isSuccess, isError, data])
 
   const handleOnchangePassword = (value) => {
     setPassword(value)
