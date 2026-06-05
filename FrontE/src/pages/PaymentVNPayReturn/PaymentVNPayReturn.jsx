@@ -4,10 +4,13 @@ import * as PaymentService from '../../services/PaymentService'
 import Loading from '../../components/LoadingComponent/Loading'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { removeAllOrderProduct } from '../../redux/slides/orderSlide'
 
 const PaymentVNPayReturn = () => {
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [status, setStatus] = useState('loading')
   const [messageText, setMessageText] = useState('Đang kiểm tra trạng thái thanh toán...')
   const [attempt, setAttempt] = useState(0)
@@ -29,6 +32,18 @@ const PaymentVNPayReturn = () => {
             setStatus('success')
             setMessageText('Thanh toán thành công')
             if (data?.orderId) localStorage.setItem('vnpay_orderId', data.orderId)
+            
+            // Clear cart items
+            try {
+              const orderedItemsStr = localStorage.getItem('vnpay_ordered_items')
+              if (orderedItemsStr) {
+                const orderedItems = JSON.parse(orderedItemsStr)
+                dispatch(removeAllOrderProduct({ listChecked: orderedItems }))
+                localStorage.removeItem('vnpay_ordered_items')
+              }
+            } catch (err) {
+              console.error('Failed to clear cart after VNPay payment:', err)
+            }
           } else if (data?.paymentStatus === 'pending') {
             setStatus('loading')
             setMessageText('Thanh toán đang chờ xử lý')

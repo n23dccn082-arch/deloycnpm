@@ -171,6 +171,9 @@ const PaymentPage = () => {
         try { 
           localStorage.setItem('vnpay_orderId', orderId)
           localStorage.setItem('vnpay_token', user?.access_token)
+          if (order?.orderItemsSlected) {
+            localStorage.setItem('vnpay_ordered_items', JSON.stringify(order.orderItemsSlected.map(item => item.product)))
+          }
         } catch (err) {}
 
         const payRes = await PaymentService.createVNPayPayment(orderId, totalPriceMemo, user?.access_token)
