@@ -121,8 +121,12 @@ const PaymentPage = () => {
   const handleAddOrder = async () => {
     setOutOfStockMsg('');
     setHighlightedProducts([]);
-    if (!user?.access_token || !order?.orderItemsSlected || !user?.name
-      || !user?.address || !user?.phone || !user?.city || !priceMemo || !user?.id) return;
+    
+    const isGuest = user?.id === 'guest';
+    const hasUserInfo = user?.name && user?.address && user?.phone && user?.city && user?.id;
+    if (!order?.orderItemsSlected || !hasUserInfo || !priceMemo || (!isGuest && !user?.access_token)) {
+      return;
+    }
 
     // Kiểm tra tồn kho trước khi gọi API
     const stockCheck = checkStockBeforeOrder();
@@ -133,7 +137,7 @@ const PaymentPage = () => {
 
     if (payment === 'vnpay') {
       try {
-        const createRes = await OrderService.createOrder({
+        const orderData = {
           orderItems: order?.orderItemsSlected,
           fullName: user?.name,
           address: user?.address,
@@ -145,7 +149,11 @@ const PaymentPage = () => {
           totalPrice: totalPriceMemo,
           user: user?.id,
           email: user?.email
-        }, user?.access_token)
+        };
+
+        const createRes = isGuest
+          ? await OrderService.createGuestOrder(orderData)
+          : await OrderService.createOrder(orderData, user?.access_token)
 
         if (createRes?.status !== 'OK') {
           let msg = createRes?.message || 'Tạo đơn hàng thất bại';
@@ -158,8 +166,12 @@ const PaymentPage = () => {
           return;
         }
 
-        const listRes = await OrderService.getOrderByUserId(user?.id, user?.access_token)
-        const latestOrder = listRes?.data && listRes.data.length ? listRes.data[0] : null
+        let latestOrder = createRes?.data;
+        if (!latestOrder && !isGuest) {
+          const listRes = await OrderService.getOrderByUserId(user?.id, user?.access_token)
+          latestOrder = listRes?.data && listRes.data.length ? listRes.data[0] : null
+        }
+
         if (!latestOrder) {
           setProcessingMsg('');
           setLoadingOrder(false);
@@ -170,14 +182,14 @@ const PaymentPage = () => {
         const orderId = latestOrder._id
         try { 
           localStorage.setItem('vnpay_orderId', orderId)
-          localStorage.setItem('vnpay_token', user?.access_token)
+          localStorage.setItem('vnpay_token', user?.access_token || '')
           if (order?.orderItemsSlected) {
             localStorage.setItem('vnpay_ordered_items', JSON.stringify(order.orderItemsSlected.map(item => item.product)))
           }
         } catch (err) {}
 
         const returnUrl = `${window.location.origin}/payment/vnpay-return`
-        const payRes = await PaymentService.createVNPayPayment(orderId, totalPriceMemo, returnUrl, user?.access_token)
+        const payRes = await PaymentService.createVNPayPayment(orderId, totalPriceMemo, returnUrl, user?.access_token || '')
         if (payRes?.status === 'OK' && payRes?.data?.paymentUrl) {
           // Không cần setLoadingOrder(false) vì sẽ redirect
           setProcessingMsg('');
@@ -246,6 +258,9 @@ const PaymentPage = () => {
       const {
         token,
         ...rests } = data
+      if (rests.user === 'guest') {
+        return OrderService.createGuestOrder({ ...rests })
+      }
       const res = OrderService.createOrder(
         { ...rests }, token)
       return res
@@ -314,15 +329,24 @@ const PaymentPage = () => {
 
 
   const handleUpdateInforUser = () => {
-    const {name, address,city, phone} = stateUserDetails
-    if(name && address && city && phone){
-      mutationUpdate.mutate({ id: user?.id, token: user?.access_token, ...stateUserDetails }, {
-        onSuccess: () => {
-          dispatch(updateUser({name, address,city, phone}))
+    form.validateFields()
+      .then((values) => {
+        const { name, address, city, phone } = values
+        if (user?.id && user?.id !== 'guest') {
+          mutationUpdate.mutate({ id: user?.id, token: user?.access_token, name, address, city, phone }, {
+            onSuccess: () => {
+              dispatch(updateUser({ name, address, city, phone }))
+              setIsOpenModalUpdateInfo(false)
+            }
+          })
+        } else {
+          dispatch(updateUser({ _id: 'guest', name, address, city, phone }))
           setIsOpenModalUpdateInfo(false)
         }
       })
-    }
+      .catch((errorInfo) => {
+        console.log('Validation Failed:', errorInfo)
+      })
   }
 
   const handleOnchangeDetails = (e) => {

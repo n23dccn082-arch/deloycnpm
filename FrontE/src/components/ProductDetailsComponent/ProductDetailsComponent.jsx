@@ -80,36 +80,21 @@ const ProductDetailsComponent = ({idProduct}) => {
 
     const { isLoading, data: productDetails, refetch } = useQuery(['product-details', idProduct], fetchGetDetailsProduct, { enabled : !!idProduct})
     const handleAddOrderProduct = () => {
-        if(!user?.id) {
-            navigate('/sign-in', {state: location?.pathname})
-        }else {
-            // {
-            //     name: { type: String, required: true },
-            //     amount: { type: Number, required: true },
-            //     image: { type: String, required: true },
-            //     price: { type: Number, required: true },
-            //     product: {
-            //         type: mongoose.Schema.Types.ObjectId,
-            //         ref: 'Product',
-            //         required: true,
-            //     },
-            // },
-            const orderRedux = order?.orderItems?.find((item) => item.product === productDetails?._id)
-            if((orderRedux?.amount + numProduct) <= orderRedux?.countInstock || (!orderRedux && productDetails?.countInStock > 0)) {
-                dispatch(addOrderProduct({
-                    orderItem: {
-                        name: productDetails?.name,
-                        amount: numProduct,
-                        image: productDetails?.image,
-                        price: productDetails?.price,
-                        product: productDetails?._id,
-                        discount: productDetails?.discount,
-                        countInstock: productDetails?.countInStock
-                    }
-                }))
-            } else {
-                setErrorLimitOrder(true)
-            }
+        const orderRedux = order?.orderItems?.find((item) => item.product === productDetails?._id)
+        if((orderRedux?.amount + numProduct) <= orderRedux?.countInstock || (!orderRedux && productDetails?.countInStock > 0)) {
+            dispatch(addOrderProduct({
+                orderItem: {
+                    name: productDetails?.name,
+                    amount: numProduct,
+                    image: productDetails?.image,
+                    price: productDetails?.price,
+                    product: productDetails?._id,
+                    discount: productDetails?.discount,
+                    countInstock: productDetails?.countInStock
+                }
+            }))
+        } else {
+            setErrorLimitOrder(true)
         }
     }
 

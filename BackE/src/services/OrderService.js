@@ -106,7 +106,8 @@ const createOrder = (newOrder) => {
                 }
                 return resolve({
                     status: 'OK',
-                    message: 'success'
+                    message: 'success',
+                    data: createdOrder
                 })
             }
         } catch (e) {
@@ -227,10 +228,72 @@ const getAllOrder = () => {
     })
 }
 
+const updateOrderStatus = (id, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { isPaid, isDelivered, status } = data
+            const order = await Order.findById(id)
+            if (order === null) {
+                return resolve({
+                    status: 'ERR',
+                    message: 'The order is not defined'
+                })
+            }
+
+            if (isPaid !== undefined) {
+                order.isPaid = isPaid
+                order.paymentStatus = isPaid ? 'paid' : 'unpaid'
+                if (isPaid) {
+                    order.paidAt = new Date()
+                } else {
+                    order.paidAt = null
+                }
+            }
+
+            if (isDelivered !== undefined) {
+                order.isDelivered = isDelivered
+                if (isDelivered) {
+                    order.deliveredAt = new Date()
+                } else {
+                    order.deliveredAt = null
+                }
+            }
+
+            if (status !== undefined) {
+                order.status = status
+                if (status === 'delivered') {
+                    order.isDelivered = true
+                    if (!order.deliveredAt) {
+                        order.deliveredAt = new Date()
+                    }
+                } else if (status === 'cancelled') {
+                    order.isDelivered = false
+                    order.deliveredAt = null
+                    order.paymentStatus = 'cancelled'
+                } else {
+                    order.isDelivered = false
+                    order.deliveredAt = null
+                }
+            }
+
+            await order.save()
+
+            return resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: order
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     createOrder,
     getAllOrderDetails,
     getOrderDetails,
     cancelOrderDetails,
-    getAllOrder
+    getAllOrder,
+    updateOrderStatus
 }

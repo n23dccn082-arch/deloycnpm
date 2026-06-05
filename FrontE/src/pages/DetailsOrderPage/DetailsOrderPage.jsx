@@ -63,6 +63,14 @@ const DetailsOrderPage = () => {
                 <div className='status-payment' style={{ color: 'orange', fontSize: '12px' }}>{data?.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</div>
               </WrapperContentInfo>
             </WrapperInfoUser>
+            <WrapperInfoUser>
+              <WrapperLabel>TRẠNG THÁI ĐƠN HÀNG</WrapperLabel>
+              <WrapperContentInfo>
+                <div className='delivery-info' style={{ fontWeight: 'bold', color: data?.status === 'cancelled' ? 'red' : data?.status === 'delivered' ? 'green' : 'orange' }}>
+                  {orderContant.status[data?.status || (data?.isDelivered ? 'delivered' : 'pending')]}
+                </div>
+              </WrapperContentInfo>
+            </WrapperInfoUser>
           </WrapperHeaderUser>
 
           <WrapperStyleContent style={{ background: '#fff', padding: '20px', borderRadius: '4px' }}>

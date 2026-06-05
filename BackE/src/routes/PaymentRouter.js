@@ -2,12 +2,12 @@ const express = require("express");
 const router = express.Router()
 const dotenv = require('dotenv');
 dotenv.config();
-const { authUserLogin } = require('../middleware/authMiddleware');
+const { authUserLogin, authOptional } = require('../middleware/authMiddleware');
 const PaymentController = require('../controllers/PaymentController');
 
 
 // VNPay payment URL creation
-router.post('/vnpay/create-payment', authUserLogin, PaymentController.createVNPayPayment);
+router.post('/vnpay/create-payment', authOptional, PaymentController.createVNPayPayment);
 
 // VNPay IPN endpoint (called by VNPay server-to-server)
 router.get('/vnpay-ipn', PaymentController.vnpayIPN);

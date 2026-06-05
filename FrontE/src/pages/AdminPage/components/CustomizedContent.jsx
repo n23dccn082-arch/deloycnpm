@@ -27,7 +27,7 @@ const CustomizedContent = (props) => {
               {item === 'orders' && <ShoppingCartOutlined />}
             </span>
             <span style={{color: '#fff',fontSize: 30, fontWeight: 'bold', textTransform: 'uppercase',}}>{item}</span>
-            <span style={{color: '#fff',fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase'}}>{data[item]}</span>
+            <span style={{color: '#fff',fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase'}}>{data[item] !== undefined ? data[item] : '...'}</span>
           </div>
         )
       })}

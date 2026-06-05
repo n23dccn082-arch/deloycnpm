@@ -1,4 +1,4 @@
-import { Button, Form, Space } from 'antd'
+import { Button, Form, Space, Select } from 'antd'
 import React from 'react'
 import { WrapperHeader, WrapperUploadFile } from './style'
 import TableComponent from '../TableComponent/TableComponent'
@@ -9,6 +9,7 @@ import ModalComponent from '../ModalComponent/ModalComponent'
 import { convertPrice, getBase64 } from '../../utils'
 import { useEffect } from 'react'
 import * as message from '../Message/Message'
+import { useMutationHooks } from '../../hooks/useMutationHook'
 
 import * as OrderService from '../../services/OrderService'
 import { useQuery } from '@tanstack/react-query'
@@ -29,6 +30,29 @@ const OrderAdmin = () => {
 
   const queryOrder = useQuery({ queryKey: ['orders'], queryFn: getAllOrder })
   const { isLoading: isLoadingOrders, data: orders } = queryOrder
+
+  const mutationUpdateStatus = useMutationHooks(
+    (data) => {
+      const { id, token, ...rests } = data
+      return OrderService.updateOrderStatus(id, rests, token)
+    }
+  )
+
+  const handleUpdateStatus = (id, fields) => {
+    mutationUpdateStatus.mutate({ id, token: user?.access_token, ...fields }, {
+      onSuccess: (data) => {
+        if (data?.status === 'OK') {
+          message.success('Cập nhật trạng thái thành công')
+          queryOrder.refetch()
+        } else {
+          message.error(data?.message || 'Cập nhật trạng thái thất bại')
+        }
+      },
+      onError: () => {
+        message.error('Cập nhật trạng thái thất bại')
+      }
+    })
+  }
 
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -111,6 +135,21 @@ const OrderAdmin = () => {
       ...getColumnSearchProps('userName')
     },
     {
+      title: 'Product',
+      dataIndex: 'product',
+      render: (text, record) => {
+        return (
+          <div>
+            {record?.orderItems?.map((item) => (
+              <div key={item._id || item.name} style={{ fontSize: '13px', marginBottom: '4px' }}>
+                <strong>{item.name}</strong> <span style={{ color: '#8c8c8c' }}>(x{item.amount})</span>
+              </div>
+            ))}
+          </div>
+        )
+      }
+    },
+    {
       title: 'Phone',
       dataIndex: 'phone',
       sorter: (a, b) => (a.phone || '').localeCompare(b.phone || ''),
@@ -126,13 +165,41 @@ const OrderAdmin = () => {
       title: 'Paided',
       dataIndex: 'isPaid',
       sorter: (a, b) => (a.isPaid || '').localeCompare(b.isPaid || ''),
-      ...getColumnSearchProps('isPaid')
+      ...getColumnSearchProps('isPaid'),
+      render: (text, record) => {
+        return (
+          <Select
+            value={record.isPaid}
+            style={{ width: 100 }}
+            onChange={(value) => handleUpdateStatus(record._id, { isPaid: value === 'TRUE' })}
+            options={[
+              { value: 'TRUE', label: 'TRUE' },
+              { value: 'FALSE', label: 'FALSE' },
+            ]}
+          />
+        )
+      }
     },
     {
-      title: 'Shipped',
-      dataIndex: 'isDelivered',
-      sorter: (a, b) => (a.isDelivered || '').localeCompare(b.isDelivered || ''),
-      ...getColumnSearchProps('isDelivered')
+      title: 'Status',
+      dataIndex: 'status',
+      sorter: (a, b) => (a.status || '').localeCompare(b.status || ''),
+      ...getColumnSearchProps('status'),
+      render: (text, record) => {
+        return (
+          <Select
+            value={record.status}
+            style={{ width: 170 }}
+            onChange={(value) => handleUpdateStatus(record._id, { status: value })}
+            options={[
+              { value: 'pending', label: 'Chưa giao hàng' },
+              { value: 'delivering', label: 'Đang giao hàng' },
+              { value: 'delivered', label: 'Giao hàng thành công' },
+              { value: 'cancelled', label: 'Đã hủy' },
+            ]}
+          />
+        )
+      }
     },
     {
       title: 'Payment method',
@@ -159,6 +226,7 @@ const OrderAdmin = () => {
       paymentMethod: orderContant.payment[order?.paymentMethod],
       isPaid: order?.isPaid ? 'TRUE' :'FALSE',
       isDelivered: order?.isDelivered ? 'TRUE' : 'FALSE', 
+      status: order?.status || 'pending',
       totalPrice: convertPrice(order?.totalPrice),
       totalPriceRaw: order?.totalPrice || 0
     }

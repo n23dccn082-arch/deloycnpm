@@ -157,15 +157,24 @@ const OrderPage = () => {
     setIsOpenModalUpdateInfo(false)
   }
   const handleUpdateInforUser = () => {
-    const {name, address,city, phone} = stateUserDetails
-    if(name && address && city && phone){
-      mutationUpdate.mutate({ id: user?.id, token: user?.access_token, ...stateUserDetails }, {
-        onSuccess: () => {
-          dispatch(updateUser({name, address,city, phone}))
+    form.validateFields()
+      .then((values) => {
+        const { name, address, city, phone } = values
+        if (user?.id && user?.id !== 'guest') {
+          mutationUpdate.mutate({ id: user?.id, token: user?.access_token, name, address, city, phone }, {
+            onSuccess: () => {
+              dispatch(updateUser({ name, address, city, phone }))
+              setIsOpenModalUpdateInfo(false)
+            }
+          })
+        } else {
+          dispatch(updateUser({ _id: 'guest', name, address, city, phone }))
           setIsOpenModalUpdateInfo(false)
         }
       })
-    }
+      .catch((errorInfo) => {
+        console.log('Validation Failed:', errorInfo)
+      })
   }
 
   const handleOnchangeDetails = (e) => {
@@ -298,7 +307,10 @@ const OrderPage = () => {
             <Form.Item
               label="Phone"
               name="phone"
-              rules={[{ required: true, message: 'Please input your  phone!' }]}
+              rules={[
+                { required: true, message: 'Please input your phone!' },
+                { pattern: /^[0-9]{10}$/, message: 'Số điện thoại phải chứa đúng 10 chữ số!' }
+              ]}
             >
               <InputComponent value={stateUserDetails.phone} onChange={handleOnchangeDetails} name="phone" />
             </Form.Item>

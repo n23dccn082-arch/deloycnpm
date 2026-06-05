@@ -98,8 +98,35 @@
   })
 }
 
+const authOptional = (req, res, next) => {
+    const authHeader = req.headers.authorization
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        req.user = undefined;
+        return next();
+    }
+
+    const token = authHeader.split(" ")[1]
+    if (token === 'undefined' || token === 'null' || !token) {
+        req.user = undefined;
+        return next();
+    }
+
+    jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Token invalid",
+                status: "ERROR"
+            })
+        }
+
+        req.user = user
+        next()
+    })
+}
+
 module.exports = {
   authMiddleWare,
   authUserMiddleWare,
-  authUserLogin
+  authUserLogin,
+  authOptional
 }

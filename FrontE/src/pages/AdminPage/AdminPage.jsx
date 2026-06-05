@@ -56,10 +56,12 @@ const AdminPage = () => {
     try {
       if(queries) {
         queries.forEach((query) => {
-          result[query?.data?.key] = query?.data?.data?.length
+          if (query?.data?.key) {
+            result[query?.data?.key] = query?.data?.data?.length
+          }
         })
       }
-    return result
+      return result
     } catch (error) {
       return result
     }

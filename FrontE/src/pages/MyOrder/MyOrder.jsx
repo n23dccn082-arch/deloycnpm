@@ -9,6 +9,7 @@ import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutationHooks } from '../../hooks/useMutationHook';
 import * as message from '../../components/Message/Message'
+import { orderContant } from '../../contant'
 
 const MyOrderPage = () => {
   const location = useLocation()
@@ -90,14 +91,14 @@ const MyOrderPage = () => {
         <div style={{height: '100%', width: '1270px', margin: '0 auto'}}>
           <h4 style={{fontSize: '14px'}}>Đơn hàng của tôi</h4>
           <WrapperListOrder>
-            {data?.map((order) => {
+            {Array.isArray(data) && data?.map((order) => {
               return (
                 <WrapperItemOrder key={order?._id}>
                   <WrapperStatus>
                     <span style={{fontSize: '14px', fontWeight: 'bold'}}>Trạng thái</span>
                     <div>
-                      <span style={{color: 'rgb(255, 66, 78)'}}>Giao hàng: </span>
-                      <span style={{color: 'black', fontWeight: 'bold'}}>{`${order.isDelivered ? 'Đã giao hàng': 'Chưa giao hàng'}`}</span>
+                      <span style={{color: 'rgb(255, 66, 78)'}}>Trạng thái đơn hàng: </span>
+                      <span style={{color: 'black', fontWeight: 'bold'}}>{`${orderContant.status[order.status || (order.isDelivered ? 'delivered' : 'pending')]}`}</span>
                     </div>
                     <div>
                       <span style={{color: 'rgb(255, 66, 78)'}}>Thanh toán: </span>

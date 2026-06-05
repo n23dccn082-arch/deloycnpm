@@ -1,4 +1,14 @@
 import { axiosJWT } from "./UserService"
+import axios from "axios"
+
+// ================= CREATE GUEST ORDER =================
+export const createGuestOrder = async (data) => {
+    const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/order/create-guest`,
+        data
+    )
+    return res.data
+}
 
 // ================= CREATE ORDER =================
 export const createOrder = async (data, access_token) => {
@@ -61,6 +71,20 @@ export const cancelOrder = async (id, access_token, orderItems, userId) => {
 export const getAllOrder = async (access_token) => {
     const res = await axiosJWT.get(
         `${process.env.REACT_APP_API_URL}/order/get-all-order`,
+        {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        }
+    )
+    return res.data
+}
+
+// ================= ADMIN UPDATE STATUS =================
+export const updateOrderStatus = async (id, data, access_token) => {
+    const res = await axiosJWT.put(
+        `${process.env.REACT_APP_API_URL}/order/update-status/${id}`,
+        data,
         {
             headers: {
                 Authorization: `Bearer ${access_token}`,
