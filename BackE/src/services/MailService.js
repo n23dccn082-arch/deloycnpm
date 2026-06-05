@@ -67,7 +67,7 @@ async function sendOrderSuccessEmail(to, order) {
   const transporter = getTransporter()
   const FROM = process.env.MAIL_FROM
   // Lấy thông tin đơn hàng
-  const { _id, shippingAddress, orderItems, totalPrice, paymentMethod, isPaid } = order;
+  const { _id, shippingAddress, orderItems, totalPrice, itemsPrice, shippingPrice, paymentMethod, isPaid } = order;
   let productRows = '';
   orderItems.forEach(item => {
     productRows += `<tr>
@@ -87,6 +87,8 @@ async function sendOrderSuccessEmail(to, order) {
       <thead><tr><th>Sản phẩm</th><th>Số lượng</th><th>Giá</th></tr></thead>
       <tbody>${productRows}</tbody>
     </table>
+    <p><b>Tạm tính:</b> ${itemsPrice ? itemsPrice.toLocaleString() : totalPrice.toLocaleString()}₫</p>
+    <p><b>Phí vận chuyển:</b> ${shippingPrice ? shippingPrice.toLocaleString() : '0'}₫</p>
     <p><b>Tổng tiền:</b> ${totalPrice.toLocaleString()}₫</p>
     <p><b>Phương thức thanh toán:</b> ${paymentMethod}</p>
     <p><b>Trạng thái thanh toán:</b> ${isPaid ? 'Đã thanh toán' : 'Thanh toán khi nhận hàng'}</p>
@@ -158,7 +160,7 @@ async function sendOrderStatusUpdateEmail(to, order) {
   const transporter = getTransporter()
   const FROM = process.env.MAIL_FROM
 
-  const { _id, status, isPaid, orderItems, totalPrice } = order;
+  const { _id, status, isPaid, orderItems, totalPrice, itemsPrice, shippingPrice } = order;
   const statusLabel = {
     pending: 'Chưa giao hàng',
     delivering: 'Đang giao hàng',
@@ -171,6 +173,7 @@ async function sendOrderStatusUpdateEmail(to, order) {
     productRows += `<tr>
       <td>${item.name}</td>
       <td>${item.amount}</td>
+      <td>${item.price ? item.price.toLocaleString() : '0'}₫</td>
     </tr>`;
   });
 
@@ -183,9 +186,11 @@ async function sendOrderStatusUpdateEmail(to, order) {
     <hr/>
     <h3>Chi tiết đơn hàng:</h3>
     <table border="1" cellpadding="6" style="border-collapse:collapse;">
-      <thead><tr><th>Sản phẩm</th><th>Số lượng</th></tr></thead>
+      <thead><tr><th>Sản phẩm</th><th>Số lượng</th><th>Giá</th></tr></thead>
       <tbody>${productRows}</tbody>
     </table>
+    <p><b>Tạm tính:</b> ${itemsPrice ? itemsPrice.toLocaleString() : totalPrice.toLocaleString()}₫</p>
+    <p><b>Phí vận chuyển:</b> ${shippingPrice ? shippingPrice.toLocaleString() : '0'}₫</p>
     <p><b>Tổng tiền:</b> ${totalPrice.toLocaleString()}₫</p>
     <p>Cảm ơn bạn đã đồng hành cùng DT Shop!</p>
   `;
