@@ -400,11 +400,17 @@ const AdminProduct = () => {
       ...stateProduct,
       [e.target.name]: e.target.value
     })
+    form.setFieldsValue({
+      [e.target.name]: e.target.value
+    })
   }
 
   const handleOnchangeDetails = (e) => {
     setStateProductDetails({
       ...stateProductDetails,
+      [e.target.name]: e.target.value
+    })
+    form.setFieldsValue({
       [e.target.name]: e.target.value
     })
   }
@@ -418,6 +424,9 @@ const AdminProduct = () => {
       ...stateProduct,
       image: file.preview
     })
+    form.setFieldsValue({
+      image: file.preview
+    })
   }
 
   const handleOnchangeAvatarDetails = async ({ fileList }) => {
@@ -427,6 +436,9 @@ const AdminProduct = () => {
     }
     setStateProductDetails({
       ...stateProductDetails,
+      image: file.preview
+    })
+    form.setFieldsValue({
       image: file.preview
     })
   }
@@ -441,6 +453,9 @@ const AdminProduct = () => {
   const handleChangeSelect = (value) => {
       setStateProduct({
         ...stateProduct,
+        type: value
+      })
+      form.setFieldsValue({
         type: value
       })
   }
@@ -477,15 +492,19 @@ const AdminProduct = () => {
               rules={[{ required: true, message: 'Please input your name!' }]}
             >
               <InputComponent value={stateProduct['name']} onChange={handleOnchange} name="name" />
-            {/* Rating removed: ratings are derived from customer reviews */}
+            </Form.Item>
+
+            <Form.Item
+              label="Type"
+              name="type"
+              rules={[{ required: true, message: 'Please input your type!' }]}
+            >
               <Select
                 name="type"
-                // defaultValue="lucy"
-                // style={{ width: 120 }}
                 value={stateProduct.type}
                 onChange={handleChangeSelect}
                 options={renderOptions(typeProduct?.data?.data)}
-                />
+              />
             </Form.Item>
             {stateProduct.type === 'add_type' && (
               <Form.Item

@@ -312,6 +312,9 @@ const AdminUser = () => {
       ...stateUserDetails,
       [e.target.name]: e.target.value
     })
+    form.setFieldsValue({
+      [e.target.name]: e.target.value
+    })
   }
 
   const handleOnchangeAvatarDetails = async ({ fileList }) => {
@@ -321,6 +324,9 @@ const AdminUser = () => {
     }
     setStateUserDetails({
       ...stateUserDetails,
+      avatar: file.preview
+    })
+    form.setFieldsValue({
       avatar: file.preview
     })
   }
