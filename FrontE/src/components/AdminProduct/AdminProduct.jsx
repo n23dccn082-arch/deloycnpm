@@ -381,12 +381,12 @@ const AdminProduct = () => {
     console.log('>>> Check token trước khi gửi:', user?.access_token);
     const params = {
       name: stateProduct.name,
-      price: stateProduct.price,
+      price: Number(String(stateProduct.price).replace(/[^0-9]/g, '')),
       description: stateProduct.description,
       image: stateProduct.image,
       type: stateProduct.type === 'add_type' ? stateProduct.newType : stateProduct.type,
-      countInStock: stateProduct.countInStock,
-      discount: stateProduct.discount
+      countInStock: Number(String(stateProduct.countInStock).replace(/[^0-9]/g, '')),
+      discount: Number(String(stateProduct.discount).replace(/[^0-9]/g, '') || '0')
     }
     mutation.mutate({ ...params, token: user?.access_token }, {
       onSettled: () => {
@@ -475,7 +475,7 @@ const AdminProduct = () => {
           };
         }} />
       </div>
-      <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null}>
+      <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null} width={600} style={{ top: 20 }} bodyStyle={{ maxHeight: '70vh', overflowY: 'auto' }}>
         <Loading isLoading={isLoading}>
 
           <Form
