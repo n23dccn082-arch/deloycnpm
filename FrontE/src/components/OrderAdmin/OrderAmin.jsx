@@ -54,6 +54,13 @@ const OrderAdmin = () => {
     })
   }
 
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+  };
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div
@@ -63,11 +70,10 @@ const OrderAdmin = () => {
         onKeyDown={(e) => e.stopPropagation()}
       >
         <InputComponent
-          // ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          // onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
             display: 'block',
@@ -76,7 +82,7 @@ const OrderAdmin = () => {
         <Space>
           <Button
             type="primary"
-            // onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
             style={{
@@ -86,7 +92,7 @@ const OrderAdmin = () => {
             Search
           </Button>
           <Button
-            // onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
             style={{
               width: 90,
@@ -105,26 +111,14 @@ const OrderAdmin = () => {
       />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      record[dataIndex]
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        : false,
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         // setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    // render: (text) =>
-    //   searchedColumn === dataIndex ? (
-    //     // <Highlighter
-    //     //   highlightStyle={{
-    //     //     backgroundColor: '#ffc069',
-    //     //     padding: 0,
-    //     //   }}
-    //     //   searchWords={[searchText]}
-    //     //   autoEscape
-    //     //   textToHighlight={text ? text.toString() : ''}
-    //     // />
-    //   ) : (
-    //     text
-    //   ),
   });
 
   const columns = [
