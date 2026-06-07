@@ -475,7 +475,7 @@ const AdminProduct = () => {
           };
         }} />
       </div>
-      <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null} width={600} style={{ top: 20 }} styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}>
+      <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null} width={600} centered styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}>
         <Loading isLoading={isLoading}>
 
           <Form
