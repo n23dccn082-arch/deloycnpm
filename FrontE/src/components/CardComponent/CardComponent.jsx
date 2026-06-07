@@ -39,13 +39,15 @@ const CardComponent = (props) => {
                 ) : (
                     <span style={{ color: '#6b7280', marginRight: '8px' }}>Chưa có đánh giá</span>
                 )}
-                <WrapperStyleTextSell> | Đã bán {selled || 101}</WrapperStyleTextSell>
+                <WrapperStyleTextSell> | Đã bán {selled ?? 0}</WrapperStyleTextSell>
             </WrapperReportText>
             <WrapperPriceText>
                 <span style={{ marginRight: '8px' }}>{convertPrice(price)}</span>
-                <WrapperDiscountText>
-                    - {discount || 5} %
-                </WrapperDiscountText>
+                {discount > 0 && (
+                    <WrapperDiscountText>
+                        - {discount} %
+                    </WrapperDiscountText>
+                )}
             </WrapperPriceText>
         </WrapperCardStyle>
     )
