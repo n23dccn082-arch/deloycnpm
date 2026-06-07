@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import DefaultComponent from './components/DefaultComponent/DefaultComponent'
 import { routes } from './routes'
 import jwt_decode from 'jwt-decode'
@@ -82,15 +82,20 @@ function App() {
                 <Routes>
                     {routes.map((route) => {
                         const Page = route.page
+                        const isRoutePrivate = route.isPrivated
                         const Layout = route.isShowHeader ? DefaultComponent : Fragment
                         return (
                             <Route
                                 key={route.path}
                                 path={route.path}
                                 element={
-                                    <Layout>
-                                        <Page />
-                                    </Layout>
+                                    isRoutePrivate && !user?.isAdmin ? (
+                                        <Navigate to="/" replace />
+                                    ) : (
+                                        <Layout>
+                                            <Page />
+                                        </Layout>
+                                    )
                                 }
                             />
                         )

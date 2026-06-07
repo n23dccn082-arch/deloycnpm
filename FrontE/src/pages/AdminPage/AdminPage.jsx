@@ -110,7 +110,7 @@ const AdminPage = () => {
           onClick={handleOnCLick}
         />
         <div style={{ flex: 1, padding: '15px 0 15px 15px' }}>
-          <Loading isLoading={memoCount && Object.keys(memoCount) &&  Object.keys(memoCount).length !== 3}>
+          <Loading isLoading={queries.some(q => q.isLoading)}>
             {!keySelected && (
               <CustomizedContent data={memoCount} colors={COLORS} setKeySelected={setKeySelected} />
             )}
