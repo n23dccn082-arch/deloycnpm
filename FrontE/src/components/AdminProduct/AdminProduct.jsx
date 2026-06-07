@@ -548,7 +548,7 @@ const AdminProduct = () => {
               name="image"
               rules={[{ required: true, message: 'Please input your count image!' }]}
             >
-              <WrapperUploadFile onChange={handleOnchangeAvatar} maxCount={1}>
+              <WrapperUploadFile beforeUpload={() => false} onChange={handleOnchangeAvatar} maxCount={1}>
                 <Button >Select File</Button>
                 {stateProduct?.image && (
                   <img src={stateProduct?.image} style={{
@@ -628,7 +628,7 @@ const AdminProduct = () => {
               name="image"
               rules={[{ required: true, message: 'Please input your count image!' }]}
             >
-              <WrapperUploadFile onChange={handleOnchangeAvatarDetails} maxCount={1}>
+              <WrapperUploadFile beforeUpload={() => false} onChange={handleOnchangeAvatarDetails} maxCount={1}>
                 <Button >Select File</Button>
                 {stateProductDetails?.image && (
                   <img src={stateProductDetails?.image} style={{

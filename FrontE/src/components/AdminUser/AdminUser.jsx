@@ -400,7 +400,7 @@ const AdminUser = () => {
               name="avatar"
               rules={[{ required: true, message: 'Please input your image!' }]}
             >
-              <WrapperUploadFile onChange={handleOnchangeAvatarDetails} maxCount={1}>
+              <WrapperUploadFile beforeUpload={() => false} onChange={handleOnchangeAvatarDetails} maxCount={1}>
                 <Button >Select File</Button>
                 {stateUserDetails?.avatar && (
                   <img src={stateUserDetails?.avatar} style={{
