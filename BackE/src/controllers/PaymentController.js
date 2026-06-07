@@ -10,19 +10,13 @@ const vnpayReturn = async (req, res) => {
     delete vnpParams.vnp_SecureHash;
     delete vnpParams.vnp_SecureHashType;
 
-    // local sortObject to match PaymentService
-    function sortObject(obj) {
-      const sorted = {};
-      const keys = Object.keys(obj).sort();
-      keys.forEach((key) => {
-        const value = obj[key] === null || obj[key] === undefined ? '' : String(obj[key]);
-        sorted[key] = encodeURIComponent(value).replace(/%20/g, '+');
-      });
-      return sorted;
-    }
-
-    const sortedParams = sortObject(vnpParams);
-    const signData = Object.keys(sortedParams).map((key) => `${key}=${sortedParams[key]}`).join('&');
+    // Sort keys and build signData using raw (decoded) values
+    // Express already decodes req.query values, so do NOT encode again
+    const sortedKeys = Object.keys(vnpParams).sort();
+    const signData = sortedKeys.map(key => {
+      const value = vnpParams[key] === null || vnpParams[key] === undefined ? '' : String(vnpParams[key]);
+      return `${key}=${encodeURIComponent(value).replace(/%20/g, '+')}`;
+    }).join('&');
 
     const vnp_HashSecret = process.env.VNP_HASH_SECRET;
     const hmac = crypto.createHmac('sha512', vnp_HashSecret);
