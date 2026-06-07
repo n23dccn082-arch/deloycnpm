@@ -252,19 +252,51 @@ const AdminProduct = () => {
       sorter: (a, b) => (a.price || 0) - (b.price || 0),
       filters: [
         {
-          text: '>= 50',
-          value: '>=',
+          text: 'Dưới 10.000.000',
+          value: '0-10',
         },
         {
-          text: '<= 50',
-          value: '<=',
+          text: '10.000.000 - 20.000.000',
+          value: '10-20',
+        },
+        {
+          text: '20.000.000 - 30.000.000',
+          value: '20-30',
+        },
+        {
+          text: '30.000.000 - 40.000.000',
+          value: '30-40',
+        },
+        {
+          text: '40.000.000 - 50.000.000',
+          value: '40-50',
+        },
+        {
+          text: 'Trên 50.000.000',
+          value: '50-up',
         }
       ],
       onFilter: (value, record) => {
-        if (value === '>=') {
-          return record.price >= 50
+        const price = Number(record.price) || 0;
+        if (value === '0-10') {
+          return price < 10000000;
         }
-        return record.price <= 50
+        if (value === '10-20') {
+          return price >= 10000000 && price < 20000000;
+        }
+        if (value === '20-30') {
+          return price >= 20000000 && price < 30000000;
+        }
+        if (value === '30-40') {
+          return price >= 30000000 && price < 40000000;
+        }
+        if (value === '40-50') {
+          return price >= 40000000 && price <= 50000000;
+        }
+        if (value === '50-up') {
+          return price > 50000000;
+        }
+        return true;
       },
     },
     {
