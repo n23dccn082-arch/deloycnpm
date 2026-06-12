@@ -16,8 +16,8 @@ function sortObject(obj) {
 
 async function createVNPayPayment({ orderId, amount, bankCode, ipAddr, userId, returnUrl }) {
   // Read config from env
-  const vnp_TmnCode = process.env.VNP_TMN_CODE;
-  const vnp_HashSecret = process.env.VNP_HASH_SECRET;
+  const vnp_TmnCode = process.env.VNP_TMN_CODE ? process.env.VNP_TMN_CODE.trim() : '';
+  const vnp_HashSecret = process.env.VNP_HASH_SECRET ? process.env.VNP_HASH_SECRET.trim() : '';
   const vnp_Url = process.env.VNP_URL;
   const vnp_ReturnUrl = returnUrl || process.env.VNP_RETURN_URL;
   if (!vnp_TmnCode || !vnp_HashSecret || !vnp_Url || !vnp_ReturnUrl) {

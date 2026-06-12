@@ -53,12 +53,13 @@ const PaymentVNPayReturn = () => {
           }
         } else {
           setStatus('failed')
-          setMessageText(res?.message || 'Không thể xác minh kết quả thanh toán. Vui lòng kiểm tra lại đơn hàng.')
+          setMessageText(res?.message ? `Không thể xác minh kết quả thanh toán: ${res.message}` : 'Không thể xác minh kết quả thanh toán. Vui lòng kiểm tra lại đơn hàng.')
         }
       } catch (e) {
         console.error('verifyVNPayReturn error:', e.response?.data || e.message || e)
         setStatus('failed')
-        setMessageText('Không thể xác minh kết quả thanh toán. Vui lòng kiểm tra lại đơn hàng.')
+        const details = e.response?.data?.message || e.message || '';
+        setMessageText(`Không thể xác minh kết quả thanh toán. Chi tiết: ${details}`)
       }
     }
     verifyReturn()

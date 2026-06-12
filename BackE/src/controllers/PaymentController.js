@@ -18,7 +18,7 @@ const vnpayReturn = async (req, res) => {
       return `${key}=${encodeURIComponent(value).replace(/%20/g, '+')}`;
     }).join('&');
 
-    const vnp_HashSecret = process.env.VNP_HASH_SECRET;
+    const vnp_HashSecret = process.env.VNP_HASH_SECRET ? process.env.VNP_HASH_SECRET.trim() : '';
     const hmac = crypto.createHmac('sha512', vnp_HashSecret);
     const computedHash = hmac.update(signData, 'utf8').digest('hex');
 
@@ -120,7 +120,7 @@ const vnpayIPN = async (req, res) => {
     const sortedKeys = Object.keys(vnpParams).sort();
     const signData = sortedKeys.map(key => `${key}=${vnpParams[key]}`).join('&');
 
-    const vnp_HashSecret = process.env.VNP_HASH_SECRET;
+    const vnp_HashSecret = process.env.VNP_HASH_SECRET ? process.env.VNP_HASH_SECRET.trim() : '';
     const hmac = crypto.createHmac('sha512', vnp_HashSecret);
     const computedHash = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
 
