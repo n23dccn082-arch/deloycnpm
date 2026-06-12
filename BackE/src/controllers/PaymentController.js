@@ -63,7 +63,6 @@ const vnpayReturn = async (req, res) => {
       order.vnpTransactionNo = vnp_TransactionNo;
       order.vnpResponseCode = vnp_ResponseCode;
       order.transactionId = vnp_TransactionNo;
-      if (order.status !== undefined) order.status = 'confirmed';
       await order.save();
       return res.status(200).json({ status: 'OK', data: { orderId: order._id, paymentStatus: order.paymentStatus, isPaid: order.isPaid } });
     }
@@ -149,7 +148,6 @@ const vnpayIPN = async (req, res) => {
       order.vnpTransactionNo = vnp_TransactionNo;
       order.vnpResponseCode = vnp_ResponseCode;
       order.transactionId = vnp_TransactionNo;
-      if (order.status !== undefined) order.status = 'confirmed';
       await order.save();
       return res.status(200).json({ RspCode: '00', Message: 'Confirm Success' });
     }
