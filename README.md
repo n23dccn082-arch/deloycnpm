@@ -22,6 +22,7 @@ Trước khi cài đặt, hãy đảm bảo máy tính của bạn đã được
 ---
 
 ## ⚙️ Hướng Dẫn Cài Đặt Chi Tiết
+##hoặc có thể truy cập hosting đã deploy để xem:https://deloycnpm.vercel.app/
 
 ### Bước 1: Clone mã nguồn về máy cục bộ
 ```bash
